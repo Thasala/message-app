@@ -1,0 +1,23 @@
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/byebug-12.0.0/ext/byebug
+/Users/salameh/.rbenv/versions/3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/byebug-12.0.0/ext/byebug
+make DESTDIR\= sitearchdir\=./.gem.20250716-81458-btyjxu sitelibdir\=./.gem.20250716-81458-btyjxu clean
+
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/byebug-12.0.0/ext/byebug
+make DESTDIR\= sitearchdir\=./.gem.20250716-81458-btyjxu sitelibdir\=./.gem.20250716-81458-btyjxu
+compiling breakpoint.c
+compiling byebug.c
+compiling context.c
+compiling locker.c
+compiling threads.c
+linking shared-object byebug/byebug.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.2'
+
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/byebug-12.0.0/ext/byebug
+make DESTDIR\= sitearchdir\=./.gem.20250716-81458-btyjxu sitelibdir\=./.gem.20250716-81458-btyjxu install
+/opt/homebrew/bin/ginstall -c -m 0755 byebug.bundle ./.gem.20250716-81458-btyjxu/byebug
+
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/byebug-12.0.0/ext/byebug
+make DESTDIR\= sitearchdir\=./.gem.20250716-81458-btyjxu sitelibdir\=./.gem.20250716-81458-btyjxu clean

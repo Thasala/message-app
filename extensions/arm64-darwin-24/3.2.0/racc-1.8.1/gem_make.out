@@ -1,0 +1,19 @@
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/racc-1.8.1/ext/racc/cparse
+/Users/salameh/.rbenv/versions/3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/racc-1.8.1/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20250716-81458-lg06b4 sitelibdir\=./.gem.20250716-81458-lg06b4 clean
+
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/racc-1.8.1/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20250716-81458-lg06b4 sitelibdir\=./.gem.20250716-81458-lg06b4
+compiling cparse.c
+linking shared-object racc/cparse.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.2'
+
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/racc-1.8.1/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20250716-81458-lg06b4 sitelibdir\=./.gem.20250716-81458-lg06b4 install
+/opt/homebrew/bin/ginstall -c -m 0755 cparse.bundle ./.gem.20250716-81458-lg06b4/racc
+
+current directory: /Users/salameh/rails-practice/msg/msg-app/gems/racc-1.8.1/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20250716-81458-lg06b4 sitelibdir\=./.gem.20250716-81458-lg06b4 clean
