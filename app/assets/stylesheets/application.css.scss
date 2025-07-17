@@ -1,1 +1,10 @@
 @import 'semantic-ui';
+
+.chatbox {
+  height: 450px !important;
+}
+.ui.segment {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
