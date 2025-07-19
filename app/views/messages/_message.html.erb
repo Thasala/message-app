@@ -1,5 +1,14 @@
- <div class="event">
+<div class="event">
+  <div class="label">
+    <i class="user circle icon purple"></i>
+  </div>
+  <div class="content">
     <div class="summary">
-        <em><%= message.user.username %></em>: <%= message.body %>
-     </div>
- </div>
+      <strong><%= message.user.username %></strong>
+      <div class="date"><%= message.created_at.strftime("%H:%M") %></div>
+    </div>
+    <div class="extra text">
+      <%= message.body %>
+    </div>
+  </div>
+</div>
