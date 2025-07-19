@@ -1,0 +1,36 @@
+<div class="ui centered card" style="width: 450px; margin-top: 30px;">
+  <div class="content">
+    <h3 class="ui center aligned icon header">
+      <i class="circular user plus icon purple"></i>
+      Create an Account
+    </h3>
+
+    <%= form_with(url: signup_path, local: true, html: { class: "ui form" }) do |f| %>
+      <div class="field">
+        <label>Username</label>
+        <div class="ui input">
+          <%= text_field_tag "user[username]", @user.username %>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="ui input">
+          <%= password_field_tag "user[password]" %>
+        </div>
+      </div>
+
+      <%= submit_tag "Sign Up", class: "ui fluid large purple submit button" %>
+    <% end %>
+
+    <% if @user.errors.any? %>
+      <div class="ui error message">
+        <ul>
+          <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>

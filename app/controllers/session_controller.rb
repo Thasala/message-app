@@ -1,9 +1,9 @@
 class SessionController < ApplicationController
+  before_action :logged_in_redirect, only: [:new, :create, :signup]
 
-  before_action :logged_in_redirect, only: [:new,:create]
   def new
   end
- 
+
   def create
     user = User.find_by(username: params[:session][:username])
     if user && user.authenticate(params[:session][:password])
@@ -16,23 +16,33 @@ class SessionController < ApplicationController
     end
   end
 
-    def destroy
+  def destroy
     session[:user_id] = nil
     flash[:success] = "You have successfully logged out"
     redirect_to login_path
-    end
+  end
 
-     def signup
-     end
-
-    private
-
-    def logged_in_redirect
-      if logged_in?
-        flash[:error]="You are already logged in!"
+  def signup
+    if request.post?
+      @user = User.new(username: params[:user][:username], password: params[:user][:password])
+      if @user.save
+        session[:user_id] = @user.id
+        flash[:success] = "Account created successfully!"
         redirect_to root_path
+      else
+        render 'signup'
       end
+    else
+      @user = User.new
     end
+  end
 
- 
+  private
+
+  def logged_in_redirect
+    if logged_in?
+      flash[:error] = "You are already logged in!"
+      redirect_to root_path
+    end
+  end
 end
