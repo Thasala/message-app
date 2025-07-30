@@ -3,7 +3,13 @@
 <%= link_to conversations_path, class: "item" do %>
   Conversations
   <% if logged_in? %>
-    <% total_unread = Message.where(read: false).where.not(user_id: current_user.id).count %>
+    <% total_unread = Message
+  .where(read: false)
+  .where.not(user_id: current_user.id)
+  .joins(:conversation)
+  .where("conversations.sender_id = ? OR conversations.recipient_id = ?", current_user.id, current_user.id)
+  .count
+ %>
     <% if total_unread > 0 %>
       <span class="ui red circular label"><%= total_unread %></span>
     <% end %>

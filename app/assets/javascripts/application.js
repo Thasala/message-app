@@ -36,7 +36,12 @@ function scroll_bottom() {
   if (container) {
     container.scrollTop = container.scrollHeight;
   }
+  const generalBox = $('#message-container')[0];
+  if (generalBox) {
+    generalBox.scrollTop = generalBox.scrollHeight;
+  }
 }
+
 
 $(document).on('turbolinks:load', function() {
   $('.ui.dropdown').dropdown();

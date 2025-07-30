@@ -15,7 +15,7 @@
 
 <div class="ui relaxed divided list">
   <% @conversations.each do |conversation| %>
-    <% other_user = conversation.sender == current_user ? conversation.recipient : conversation.sender %>
+    <% other_user = conversation.other_user(current_user) %>
     <% unread_count = conversation.messages.where(read: false).where.not(user_id: current_user.id).count %>
 
     <div class="item">

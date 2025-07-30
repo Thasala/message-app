@@ -1,3 +1,4 @@
+# app/models/conversation.rb
 class Conversation < ApplicationRecord
   belongs_to :sender, class_name: 'User'
   belongs_to :recipient, class_name: 'User'
@@ -7,11 +8,15 @@ class Conversation < ApplicationRecord
   validates :sender_id, uniqueness: { scope: :recipient_id }
 
   scope :between, -> (sender_id, recipient_id) do
-    where("(conversations.sender_id = ? AND conversations.recipient_id = ?) OR (conversations.sender_id = ? AND conversations.recipient_id = ?)", sender_id, recipient_id, recipient_id, sender_id)
+    where(
+      "(conversations.sender_id = :s AND conversations.recipient_id = :r) OR 
+       (conversations.sender_id = :r AND conversations.recipient_id = :s)",
+      s: sender_id, r: recipient_id
+    )
   end
 
-  # 👇 Add this helper
   def other_user(current_user)
-    sender == current_user ? recipient : sender
+    # Make sure we're comparing user IDs directly
+    current_user.id == sender_id ? recipient : sender
   end
 end
