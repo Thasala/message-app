@@ -1,0 +1,5 @@
+// Add new message to the message list
+document.querySelector("#messages").insertAdjacentHTML("beforeend", "<%= j render partial: 'messages/message', locals: { message: @message } %>");
+
+// Optionally clear the input
+document.querySelector("#message_body").value = "";

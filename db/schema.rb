@@ -10,13 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_07_18_135449) do
+ActiveRecord::Schema.define(version: 2025_07_30_114109) do
+
+  create_table "chatrooms", force: :cascade do |t|
+    t.integer "sender_id"
+    t.integer "receiver_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "conversation_users", force: :cascade do |t|
+    t.integer "conversation_id"
+    t.integer "user_id"
+    t.datetime "last_read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_conversation_users_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_users_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "sender_id"
+    t.integer "recipient_id"
+  end
+
+  create_table "conversations_and_participants", force: :cascade do |t|
+  end
 
   create_table "messages", force: :cascade do |t|
     t.text "body"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "conversation_id"
+    t.integer "chatroom_id"
+    t.boolean "read"
+    t.index ["chatroom_id"], name: "index_messages_on_chatroom_id"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
   end
 
   create_table "users", force: :cascade do |t|

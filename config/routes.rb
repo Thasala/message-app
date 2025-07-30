@@ -1,12 +1,21 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  # Root route
   root "chatroom#index"
+
+  # Authentication
   get "login", to: "session#new"
   match "signup", to: "session#signup", via: [:get, :post]
-  post 'login', to: 'session#create'
-  delete 'logout', to: 'session#destroy'
-  post 'message', to: 'messages#create'
+  post "login", to: "session#create"
+  delete "logout", to: "session#destroy"
 
-  mount ActionCable.server => '/cable'
+  # General public chatroom message route (restored!)
+  post "message", to: "messages#create"
 
+  # Private chats
+  resources :conversations, only: [:index, :show, :create] do
+    resources :messages, only: [:create], module: :conversations
+  end
+
+  # ActionCable
+  mount ActionCable.server => "/cable"
 end

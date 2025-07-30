@@ -2,9 +2,13 @@ class MessagesController < ApplicationController
   before_action :require_user
 
   def create
-    message = current_user.messages.build(message_params)
-    if message.save
-      ActionCable.server.broadcast "chatroom_channel", mod_message: render_message(message)
+    @message = Message.new(message_params)
+    @message.user = current_user
+
+    if @message.save
+      ActionCable.server.broadcast "chatroom_channel", {
+        mod_message: render_message(@message)
+      }
       head :ok
     else
       render plain: "Message failed", status: :unprocessable_entity
@@ -18,6 +22,8 @@ class MessagesController < ApplicationController
   end
 
   def render_message(message)
-    ApplicationController.renderer.render(partial: 'messages/message', locals: { message: message })
+    ApplicationController.renderer.render(
+      partial: 'messages/message', locals: { message: message }
+    )
   end
 end

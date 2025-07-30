@@ -1,0 +1,30 @@
+<h2>Your Conversations</h2>
+
+<%= form_with url: conversations_path, method: :post, local: true do |f| %>
+  <div class="field">
+    <%= label_tag :recipient_id, "Start chat with:" %>
+    <%= select_tag :recipient_id,
+      options_from_collection_for_select(User.where.not(id: current_user.id), :id, :username),
+      prompt: "Choose user",
+      class: "ui dropdown" %>
+  </div>
+  <%= f.submit "Start Conversation", class: "ui button primary" %>
+<% end %>
+
+<hr>
+
+<div class="ui relaxed divided list">
+  <% @conversations.each do |conversation| %>
+    <% other_user = conversation.sender == current_user ? conversation.recipient : conversation.sender %>
+    <% unread_count = conversation.messages.where(read: false).where.not(user_id: current_user.id).count %>
+
+    <div class="item">
+      <%= link_to conversation_path(conversation), class: "content" do %>
+        <%= other_user.username %>
+        <% if unread_count > 0 %>
+          <span class="ui red circular label"><%= unread_count %></span>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

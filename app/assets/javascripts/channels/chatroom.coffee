@@ -8,4 +8,5 @@ App.chatroom = App.cable.subscriptions.create "ChatroomChannel",
   received: (data) ->
     console.log "📥 Received:", data
     $('#message-container').append data.mod_message
-    scroll_bottom()
+    $('#message_body').val('').focus()
+    $('#message-container').scrollTop($('#message-container')[0].scrollHeight)

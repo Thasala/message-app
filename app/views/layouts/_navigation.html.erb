@@ -1,25 +1,26 @@
 <%= link_to "Chatroom", root_path, class: "item" %>
 
-          <a class="item">
-            Messages
-          </a>
-          <div class="right menu">
-            <div class="ui dropdown item">
-              Account <i class="dropdown icon"></i>
-              <div class="menu">
-              
+<%= link_to conversations_path, class: "item" do %>
+  Conversations
+  <% if logged_in? %>
+    <% total_unread = Message.where(read: false).where.not(user_id: current_user.id).count %>
+    <% if total_unread > 0 %>
+      <span class="ui red circular label"><%= total_unread %></span>
+    <% end %>
+  <% end %>
+<% end %>
 
-               
-                   <% if logged_in? %>
-                      <%= link_to "Logout", logout_path, method: :delete, class: "item" %>
-                    <% else %>
-                      <%= link_to "Log in", login_path, class: "item" %>
-                    <% end %>
-              </div>
-            </div>
-            <% if !logged_in? %>
-              <div class="item">
-                <%= link_to "Log in", login_path, class: "ui primary button" %>
-              </div>
-            <% end %>
-        </div>
+<div class="right menu">
+  <% if logged_in? %>
+    <div class="ui dropdown item">
+      Account <i class="dropdown icon"></i>
+      <div class="menu">
+        <%= link_to "Logout", logout_path, method: :delete, class: "item" %>
+      </div>
+    </div>
+  <% else %>
+    <div class="item">
+      <%= link_to "Log in", login_path, class: "ui primary button" %>
+    </div>
+  <% end %>
+</div>
