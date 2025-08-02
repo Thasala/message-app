@@ -19,7 +19,11 @@ $(document).on 'turbolinks:load', ->
     received: (data) ->
       console.log "📥 Received:", data
       $('#conversation-messages').append(data.mod)
-      $('#private-message-form textarea').val('')
+
+      # ✅ Clear input ONLY if sender
+      if data.sender_id == window.currentUserId
+        $('#private-message-form textarea').val('')
+
       $('#conversation-messages').scrollTop($('#conversation-messages')[0].scrollHeight)
 
 $(document).on 'turbolinks:before-visit', ->

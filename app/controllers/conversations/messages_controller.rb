@@ -3,14 +3,17 @@ class Conversations::MessagesController < ApplicationController
   before_action :set_conversation
 
   def create
-      Rails.logger.info "📨 Received POST to create message"
-  Rails.logger.info "➡️ Params: #{params.inspect}"
+    Rails.logger.info "📨 Received POST to create message"
+    Rails.logger.info "➡️ Params: #{params.inspect}"
+
     @message = @conversation.messages.build(message_params)
     @message.user = current_user
 
     if @message.save
-      ActionCable.server.broadcast "conversation_#{@conversation.id}",
-                                   mod: render_message(@message)
+      ActionCable.server.broadcast "conversation_#{@conversation.id}", {
+        mod: render_message(@message),
+        sender_id: current_user.id
+      }
       head :ok
     else
       render plain: "Message failed", status: :unprocessable_entity

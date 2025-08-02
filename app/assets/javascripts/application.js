@@ -7,66 +7,109 @@
 //= require_self
 //= require_tree .
 
-(function() {
+(function () {
   this.App || (this.App = {});
   App.cable = ActionCable.createConsumer();
 }).call(this);
 
-// 🟣 Handle enter key for public or private chat forms
+// 🟣 Handle Enter key for both chat forms
 function submit_message() {
   const input = $('#message_body');
-  if (input.length) {
-    input.on('keydown', function(e) {
-      if (e.keyCode === 13 && !e.shiftKey) {
-        e.preventDefault();
+  if (!input.length) return;
 
-        const form = input.closest('form');
-        if (form.length) {
-          form.submit();
-          input.val('');
-        }
+  input.on('keydown', function (e) {
+    if (e.keyCode === 13 && !e.shiftKey) {
+      e.preventDefault();
+      const form = input.closest('form');
+      if (form.length) {
+        form.submit();
+        input.val(''); // Clear only sender's field
       }
-    });
-  }
+    }
+  });
+   const sendButton = $('#send-message-button');
+  sendButton.on('click', function (e) {
+    e.preventDefault();
+    const form = input.closest('form');
+    if (form.length) {
+      form.submit();
+      input.val('');
+    }
+  });
 }
 
-// 🔽 Scroll to latest message
+// 🔽 Scroll to latest messages
 function scroll_bottom() {
-  const container = $('#conversation-messages')[0];
-  if (container) {
-    container.scrollTop = container.scrollHeight;
-  }
+  const privateBox = $('#conversation-messages')[0];
+  if (privateBox) privateBox.scrollTop = privateBox.scrollHeight;
+
   const generalBox = $('#message-container')[0];
-  if (generalBox) {
-    generalBox.scrollTop = generalBox.scrollHeight;
-  }
+  if (generalBox) generalBox.scrollTop = generalBox.scrollHeight;
 }
 
+// 🧠 ActionCable private chat
+$(document).on('turbolinks:load', function () {
+  const conversationId = $('#conversation-messages').data('conversation-id');
 
-$(document).on('turbolinks:load', function() {
+  if (conversationId) {
+    if (App.conversation) {
+      App.conversation.unsubscribe();
+      delete App.conversation;
+    }
+
+    App.conversation = App.cable.subscriptions.create(
+      {
+        channel: 'ConversationChannel',
+        conversation_id: conversationId,
+      },
+      {
+        connected() {
+          console.log(`✅ Connected to conversation ${conversationId}`);
+        },
+        disconnected() {
+          console.log('❌ Disconnected from conversation');
+        },
+        received(data) {
+          console.log('📥 Received:', data);
+          $('#conversation-messages').append(data.mod);
+          
+          // Only clear if current user is sender
+          if (data.sender_id == window.currentUserId) {
+            $('#private-message-form textarea').val('');
+          }
+
+          scroll_bottom();
+        },
+      }
+    );
+  }
+
+  // UI behavior
   $('.ui.dropdown').dropdown();
-  $('.message .close').on('click', function() {
+  $('.message .close').on('click', function () {
     $(this).closest('.message').transition('fade');
   });
 
-  // 🟣 Attach AJAX events for private chat
   $('#private-message-form')
-    .on('ajax:success', function(event) {
-      console.log("✅ Private message sent");
-    })
-    .on('ajax:error', function(event) {
-      console.error("❌ Error sending private message:", event.detail);
-    });
+    .on('ajax:success', () => console.log('✅ Private message sent'))
+    .on('ajax:error', (e) =>
+      console.error('❌ Error sending private message:', e.detail)
+    );
 
-  // 🟣 Attach AJAX events for public chat (optional)
   $('#chat_form')
-    .on('ajax:success', function(event) {
-      console.log("✅ Public message sent");
-    })
-    .on('ajax:error', function(event) {
-      console.error("❌ Error sending public message:", event.detail);
-    });
+    .on('ajax:success', () => console.log('✅ Public message sent'))
+    .on('ajax:error', (e) =>
+      console.error('❌ Error sending public message:', e.detail)
+    );
 
   submit_message();
   scroll_bottom();
+});
+
+// 🧼 Unsubscribe on page change
+$(document).on('turbolinks:before-visit', function () {
+  if (App.conversation) {
+    App.conversation.unsubscribe();
+    delete App.conversation;
+  }
 });

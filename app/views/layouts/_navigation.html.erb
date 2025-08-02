@@ -1,32 +1,44 @@
-<%= link_to "Chatroom", root_path, class: "item" %>
+<!-- layouts/_navigation.html.erb -->
 
-<%= link_to conversations_path, class: "item" do %>
-  Conversations
-  <% if logged_in? %>
-    <% total_unread = Message
-  .where(read: false)
-  .where.not(user_id: current_user.id)
-  .joins(:conversation)
-  .where("conversations.sender_id = ? OR conversations.recipient_id = ?", current_user.id, current_user.id)
-  .count
- %>
-    <% if total_unread > 0 %>
-      <span class="ui red circular label"><%= total_unread %></span>
+
+<div class="ui inverted menu" style="background-color: #6a1b9a; border-radius: 0; margin: 0;">
+  <div class="ui container">
+
+    
+
+    <%= link_to root_path, class: "item" do %>
+      <i class="comments icon"></i> Chatroom
     <% end %>
-  <% end %>
-<% end %>
 
-<div class="right menu">
-  <% if logged_in? %>
-    <div class="ui dropdown item">
-      Account <i class="dropdown icon"></i>
-      <div class="menu">
-        <%= link_to "Logout", logout_path, method: :delete, class: "item" %>
-      </div>
+    <%= link_to conversations_path, class: "item" do %>
+      Conversations
+      <% if logged_in? %>
+        <% total_unread = Conversation
+            .joins(:messages)
+            .where("(conversations.sender_id = :id OR conversations.recipient_id = :id)", id: current_user.id)
+            .where("messages.read = ? AND messages.user_id != ?", false, current_user.id)
+            .distinct.count %>
+        <% if total_unread > 0 %>
+          <span class="ui red circular label"><%= total_unread %></span>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <div class="right menu">
+      <% if logged_in? %>
+        <div class="ui dropdown item">
+          <i class="user icon"></i> <%= current_user.username %>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <%= link_to "Logout", logout_path, method: :delete, class: "item" %>
+          </div>
+        </div>
+      <% else %>
+        <div class="item">
+          <%= link_to "Log in", login_path, class: "ui primary button" %>
+        </div>
+      <% end %>
     </div>
-  <% else %>
-    <div class="item">
-      <%= link_to "Log in", login_path, class: "ui primary button" %>
-    </div>
-  <% end %>
+
+  </div>
 </div>
